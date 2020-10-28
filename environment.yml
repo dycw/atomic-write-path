@@ -1,4 +1,4 @@
-name: write-context
+name: writer-cm
 
 dependencies:
   - python = 3.8
