@@ -1,7 +1,7 @@
-name: python-project-template
+name: write-context
 
 dependencies:
-  - python = 3.8.*
+  - python = 3.8
   - pip
   - pip:
       - --requirement=requirements/dev.txt
