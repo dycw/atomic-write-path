@@ -33,7 +33,7 @@ def writer_cm(
         path_parent = Path(*parts[: (idx + 1)])
         try:
             path_parent.mkdir(mode=dir_perms)
-        except (FileExistsError, IsADirectoryError):
+        except (FileExistsError, IsADirectoryError, PermissionError):
             pass
     name = destination.name
     with TemporaryDirectory(suffix=".tmp", prefix=name, dir=parent) as temp_dir:
