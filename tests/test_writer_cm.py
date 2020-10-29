@@ -7,6 +7,7 @@ from stat import S_IRWXO
 from stat import S_IRWXU
 from stat import S_IWUSR
 from stat import S_IXUSR
+from sys import platform
 from typing import Union
 
 from pytest import mark
@@ -36,17 +37,6 @@ def test_basic_usage(
         assert fh2.read() == contents
 
 
-def test_file_exists_error(tmp_path: Path) -> None:
-    path = tmp_path.joinpath("file.txt")
-    with writer_cm(path) as temp1:
-        with open(temp1, mode="w") as fh1:
-            fh1.write("contents")
-    with raises(FileExistsError, match=str(path)):
-        with writer_cm(path) as temp2:
-            with open(temp2, mode="w") as fh2:
-                fh2.write("new contents")
-
-
 def test_dir_perms(tmp_path: Path) -> None:
     path = tmp_path.joinpath("dir1/dir2/dir3/file.txt")
     with writer_cm(path, dir_perms=S_IRWXU) as temp:
@@ -59,16 +49,19 @@ def test_dir_perms(tmp_path: Path) -> None:
         assert path_parent.stat().st_mode & S_IRWXU & (~S_IRWXG) & (~S_IRWXO)
 
 
-def test_overwrite(tmp_path: Path) -> None:
+@mark.skipif(  # type: ignore
+    platform == "win32",
+    reason=r"re.error: incomplete escape \U at position 2",
+)
+def test_file_exists_error(tmp_path: Path) -> None:
     path = tmp_path.joinpath("file.txt")
     with writer_cm(path) as temp1:
         with open(temp1, mode="w") as fh1:
             fh1.write("contents")
-    with writer_cm(path, overwrite=True) as temp2:
-        with open(temp2, mode="w") as fh2:
-            fh2.write("new contents")
-    with open(str(path)) as fh3:
-        assert fh3.read() == "new contents"
+    with raises(FileExistsError, match=str(path)):
+        with writer_cm(path) as temp2:
+            with open(temp2, mode="w") as fh2:
+                fh2.write("new contents")
 
 
 def test_file_perms(tmp_path: Path) -> None:
@@ -84,3 +77,15 @@ def test_file_perms(tmp_path: Path) -> None:
         & (~S_IRWXG)
         & (~S_IRWXO)
     )
+
+
+def test_overwrite(tmp_path: Path) -> None:
+    path = tmp_path.joinpath("file.txt")
+    with writer_cm(path) as temp1:
+        with open(temp1, mode="w") as fh1:
+            fh1.write("contents")
+    with writer_cm(path, overwrite=True) as temp2:
+        with open(temp2, mode="w") as fh2:
+            fh2.write("new contents")
+    with open(str(path)) as fh3:
+        assert fh3.read() == "new contents"
