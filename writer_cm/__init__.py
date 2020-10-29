@@ -15,7 +15,7 @@ from atomicwrites import replace_atomic
 
 
 __all__ = ["writer_cm"]
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 @contextmanager
@@ -33,7 +33,7 @@ def writer_cm(
         path_parent = Path(*parts[: (idx + 1)])
         try:
             path_parent.mkdir(mode=dir_perms)
-        except (FileExistsError, IsADirectoryError):
+        except (FileExistsError, IsADirectoryError, PermissionError):
             pass
     name = destination.name
     with TemporaryDirectory(suffix=".tmp", prefix=name, dir=parent) as temp_dir:
