@@ -7,23 +7,37 @@ from stat import S_IRWXO
 from stat import S_IRWXU
 from stat import S_IWUSR
 from stat import S_IXUSR
+from typing import Union
 
+from pytest import mark
+from pytest import param
 from pytest import raises
 
 from writer_cm import writer_cm
 
 
-def test_basic_usage(tmp_path: Path) -> None:
-    path = tmp_path.joinpath("file")
+@mark.parametrize(  # type: ignore
+    "is_binary, contents",
+    [
+        param(False, "contents", id="text"),
+        param(True, b"contents", id="binary"),
+    ],
+)
+def test_basic_usage(
+    tmp_path: Path,
+    is_binary: bool,
+    contents: Union[str, bytes],
+) -> None:
+    path = tmp_path.joinpath("file.txt")
     with writer_cm(path) as temp:
-        with open(temp, mode="w") as fh1:
-            fh1.write("contents")
-    with open(str(path)) as fh2:
-        assert fh2.read() == "contents"
+        with open(temp, mode="wb" if is_binary else "w") as fh1:
+            fh1.write(contents)
+    with open(str(path), mode="rb" if is_binary else "r") as fh2:
+        assert fh2.read() == contents
 
 
 def test_file_exists_error(tmp_path: Path) -> None:
-    path = tmp_path.joinpath("file")
+    path = tmp_path.joinpath("file.txt")
     with writer_cm(path) as temp1:
         with open(temp1, mode="w") as fh1:
             fh1.write("contents")
@@ -34,7 +48,7 @@ def test_file_exists_error(tmp_path: Path) -> None:
 
 
 def test_dir_perms(tmp_path: Path) -> None:
-    path = tmp_path.joinpath("dir1/dir2/dir3/file")
+    path = tmp_path.joinpath("dir1/dir2/dir3/file.txt")
     with writer_cm(path, dir_perms=S_IRWXU) as temp:
         with open(temp, mode="w") as fh:
             fh.write("contents")
@@ -46,7 +60,7 @@ def test_dir_perms(tmp_path: Path) -> None:
 
 
 def test_overwrite(tmp_path: Path) -> None:
-    path = tmp_path.joinpath("file")
+    path = tmp_path.joinpath("file.txt")
     with writer_cm(path) as temp1:
         with open(temp1, mode="w") as fh1:
             fh1.write("contents")
@@ -58,7 +72,7 @@ def test_overwrite(tmp_path: Path) -> None:
 
 
 def test_file_perms(tmp_path: Path) -> None:
-    path = tmp_path.joinpath("file")
+    path = tmp_path.joinpath("file.txt")
     with writer_cm(path, file_perms=S_IRUSR) as temp:
         with open(temp, mode="w") as fh:
             fh.write("contents")
