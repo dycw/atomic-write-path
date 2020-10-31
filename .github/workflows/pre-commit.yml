@@ -7,7 +7,7 @@ on:
 
 jobs:
   pre-commit:
-    name: pre-commit (${{ matrix.os }}, ${{ matrix.python-version }})
+    name: pre-commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
