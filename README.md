@@ -5,7 +5,7 @@
 ## Features
 
 - Cross-platform atomic file writes powered by [python-atomicwrites](https://github.com/untitaker/python-atomicwrites).
-- Interface using a file path instead of a file handle, for more compatible with external libraries (e.g. `pandas.to_pickle`).
+- Interface using a file path instead of a file handle, for more compatibility with external libraries (e.g. `pandas.to_pickle`).
 - Automatically create missing directories and set their permissions.
 - Automatically set the file permissions.
 
