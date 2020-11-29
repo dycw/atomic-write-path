@@ -22,7 +22,7 @@ class MetaData:
 def _get_metadata() -> MetaData:
     with open("README.md") as file:
         long_description = file.read()
-    first, second, *_ = long_description.splitlines()
+    first, _, second, *_ = long_description.splitlines()
     if (match := search(r"^# ([\w-]+)$", first)) is not None:
         name = match.group(1)
     else:
@@ -64,6 +64,8 @@ setup(
     version=_METADATA.version,
     author="Derek Wan",
     author_email="d.wan@icloud.com",
+    url="https://github.com/dycw/writer-cm/",
+    download_url="https://pypi.org/project/writer-cm/",
     license="MIT",
     description=_METADATA.description,
     long_description=_METADATA.long_description,
