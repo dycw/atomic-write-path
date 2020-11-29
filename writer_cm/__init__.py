@@ -15,7 +15,7 @@ from atomicwrites import replace_atomic
 
 
 __all__ = ["writer_cm"]
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 
 
 @contextmanager
