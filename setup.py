@@ -64,6 +64,8 @@ setup(
     version=_METADATA.version,
     author="Derek Wan",
     author_email="d.wan@icloud.com",
+    url="https://github.com/dycw/writer-cm/",
+    download_url="https://pypi.org/project/writer-cm/",
     license="MIT",
     description=_METADATA.description,
     long_description=_METADATA.long_description,
