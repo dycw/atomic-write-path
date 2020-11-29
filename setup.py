@@ -22,7 +22,7 @@ class MetaData:
 def _get_metadata() -> MetaData:
     with open("README.md") as file:
         long_description = file.read()
-    first, second, *_ = long_description.splitlines()
+    first, _, second, *_ = long_description.splitlines()
     if (match := search(r"^# ([\w-]+)$", first)) is not None:
         name = match.group(1)
     else:
