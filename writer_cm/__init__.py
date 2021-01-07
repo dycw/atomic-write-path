@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
+from contextlib import suppress
 from pathlib import Path
 from stat import S_IRUSR
 from stat import S_IRWXG
@@ -15,7 +16,7 @@ from atomicwrites import replace_atomic
 
 
 __all__ = ["writer_cm"]
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 
 @contextmanager
@@ -31,10 +32,8 @@ def writer_cm(
     parts = parent.parts
     for idx, _ in enumerate(parts):
         path_parent = Path(*parts[: (idx + 1)])
-        try:
+        with suppress(FileExistsError, IsADirectoryError, PermissionError):
             path_parent.mkdir(mode=dir_perms)
-        except (FileExistsError, IsADirectoryError, PermissionError):
-            pass
     name = destination.name
     with TemporaryDirectory(suffix=".tmp", prefix=name, dir=parent) as temp_dir:
         source = Path(temp_dir).joinpath(name)
