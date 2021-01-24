@@ -1,7 +1,14 @@
 name: writer-cm
 
+channels:
+  - conda-forge
+
 dependencies:
   - python = 3.9
+  - bump2version
+  - pre-commit
+  - pytest
+  - pytest-xdist
   - pip
   - pip:
-      - --requirement=requirements/dev.txt
+      - --requirement=requirements.txt
