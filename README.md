@@ -29,12 +29,34 @@ pip install writer-cm
 from writer_cm import writer_cm
 
 with writer_cm("file.txt") as temp:
+    # now `temp` is a `pathlib.Path` object which you can atomically write to
     with open(temp, mode="w") as fh:
         fh.write("foo")
+
+# now file.txt has been atomically written to
 
 with open("file.txt") as fh:
     assert fh.read() == "foo"
 ```
+
+Automatically create missing directories and set their permissions:
+
+```python
+from stat import S_IRWXU, S_IRWXG, S_IRUSR, S_IWUSR
+
+with writer_cm("dir1/dir2/dir3/file.txt",
+               dir_perms=S_IRWXU | S_IRWXG,
+               file_perms=S_IRUSR, S_IWUSR,
+               ) as temp:
+    with open(temp, mode="w") as fh:
+        fh.write("foo")
+
+# now `dir1/dir2/dir3`          has been created with u=rwx,g=rwx permissions
+#     `dir1/dir2/dir3.file.txt` has been created with u=rw        permissions
+```
+
+For more info on `stat`, see the
+[official docs](https://docs.python.org/3/library/stat.html).
 
 Pass `overwrite=True` to overwrite an already existing file; an error is thrown otherwise:
 
