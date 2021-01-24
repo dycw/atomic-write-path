@@ -54,8 +54,8 @@ file permissions too.
 from stat import S_IRWXU, S_IRWXG, S_IRUSR, S_IWUSR
 
 with writer_cm("dir1/dir2/dir3/file.txt",
-               dir_perms=S_IRWXU | S_IRWXG,  # the default
-               file_perms=S_IRUSR, S_IWUSR,  # the default
+               dir_perms=S_IRWXU | S_IRWXG,   # the default
+               file_perms=S_IRUSR | S_IWUSR,  # the default
                ) as temp:
     with open(temp, mode="w") as fh:
         fh.write("foo")
