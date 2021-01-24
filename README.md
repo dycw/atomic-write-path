@@ -1,6 +1,6 @@
 # writer-cm
 
-![GitHub](https://github.com/dycw/writer-cm/workflows/tag/badge.svg)
+![GitHub](https://github.com/dycw/writer-cm/workflows/push/badge.svg)
 [![PyPI version](https://badge.fury.io/py/writer-cm.svg)](https://badge.fury.io/py/writer-cm)
 
 ## Overview
