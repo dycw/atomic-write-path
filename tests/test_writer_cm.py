@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pathlib import Path
 from stat import S_IRUSR
 from stat import S_IRWXG

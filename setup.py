@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 from re import MULTILINE
@@ -45,7 +43,7 @@ def _get_metadata() -> MetaData:
             version = match.group(1)
         else:
             raise ValueError(f"Unable to determine 'version' from {path}")
-    with open(root.joinpath("requirements", "core.txt")) as file:
+    with open(root.joinpath("requirements.txt")) as file:
         install_requires = file.read().strip().split("\n")
     return MetaData(
         name=name,
