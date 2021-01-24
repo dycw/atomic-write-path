@@ -25,22 +25,30 @@ pip install writer-cm
 
 ## Usage
 
+Import and invoke `writer_cm` as a context manager to obtain a `pathlib.Path`
+object to which you can atomically write to:
+
 ```python
 from writer_cm import writer_cm
 
 with writer_cm("file.txt") as temp:
-    # now `temp` is a `pathlib.Path` object
+    # `temp` is a `pathlib.Path` object
 
     with open(temp, mode="w") as fh:
         fh.write("foo")
 
-# now file.txt has been atomically written
+# file.txt is atomically written to upon leaving the context manager
 
 with open("file.txt") as fh:
     assert fh.read() == "foo"
 ```
 
-Automatically create missing directories and set their permissions:
+`writer_cm` can also automatically create missing directories and set their
+permissions (which is done carefully as opposed to relying on
+[`Path.mkdir`](https://docs.python.org/3/library/pathlib.html#pathlib.Path.mkdir),
+which itself notes that "\[parents\] are created with the default permissions
+without taking _mode_ into account"). Analogously, `writer_cm` can also set the
+file permissions too.
 
 ```python
 from stat import S_IRWXU, S_IRWXG, S_IRUSR, S_IWUSR
@@ -59,7 +67,8 @@ with writer_cm("dir1/dir2/dir3/file.txt",
 For more info on `stat`, see the
 [official docs](https://docs.python.org/3/library/stat.html).
 
-Pass `overwrite=True` to overwrite an already existing file; an error is thrown otherwise:
+Finally, pass `overwrite=True` to overwrite an already existing file; an error
+is thrown otherwise:
 
 ```python
 with writer_cm("file.txt", overwrite=True) as temp:
