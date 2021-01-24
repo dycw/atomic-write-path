@@ -29,11 +29,12 @@ pip install writer-cm
 from writer_cm import writer_cm
 
 with writer_cm("file.txt") as temp:
-    # now `temp` is a `pathlib.Path` object which you can atomically write to
+    # now `temp` is a `pathlib.Path` object
+
     with open(temp, mode="w") as fh:
         fh.write("foo")
 
-# now file.txt has been atomically written to
+# now file.txt has been atomically written
 
 with open("file.txt") as fh:
     assert fh.read() == "foo"
@@ -45,8 +46,8 @@ Automatically create missing directories and set their permissions:
 from stat import S_IRWXU, S_IRWXG, S_IRUSR, S_IWUSR
 
 with writer_cm("dir1/dir2/dir3/file.txt",
-               dir_perms=S_IRWXU | S_IRWXG,
-               file_perms=S_IRUSR, S_IWUSR,
+               dir_perms=S_IRWXU | S_IRWXG,  # the default
+               file_perms=S_IRUSR, S_IWUSR,  # the default
                ) as temp:
     with open(temp, mode="w") as fh:
         fh.write("foo")
