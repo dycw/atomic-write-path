@@ -19,16 +19,16 @@ class MetaData:
 
 def _get_metadata() -> MetaData:
     with open("README.md") as file:
-        long_description = file.read()
-    first, _, second, *_ = long_description.splitlines()
-    if (match := search(r"^# ([\w-]+)$", first)) is not None:
-        name = match.group(1)
-    else:
-        raise ValueError(f"Unable to determine 'name' from line {first!r}")
-    if (match := search(r"^(.+)$", second)) is not None:
-        description = match.group(1)
-    else:
-        raise ValueError(f"Unable to determine 'description' from {second!r}")
+        contents = file.read()
+    if (match_1 := search(r"^# ([\w-]+)", contents, flags=MULTILINE)) is None:
+        raise ValueError("Unable to determine 'name'")
+    name = match_1.group(1)
+    if (match_2 := search("^## Overview", contents, flags=MULTILINE)) is None:
+        raise ValueError("Unable to determine start of 'description'")
+    long_description = contents[match_2.end() :].strip("\n")
+    if (match_3 := search("^## ", long_description, flags=MULTILINE)) is None:
+        raise ValueError("Unable to determine end of 'description'")
+    description = long_description[: match_3.start()].replace("\n", " ").strip("\n")
     root = Path(__file__).resolve().parent
     with open(
         path := root.joinpath(name.replace("-", "_"), "__init__.py"),
