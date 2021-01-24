@@ -1,11 +1,14 @@
 # writer-cm
 
-`writer-cm` is a context manager allowing you to atomically write files given a file path.
+`writer-cm` is a context manager allowing you to atomically write files given a
+file path.
 
 ## Features
 
-- Cross-platform atomic file writes powered by [python-atomicwrites](https://github.com/untitaker/python-atomicwrites).
-- Interface using a file path instead of a file handle, for more compatibility with external libraries (e.g. `pandas.to_pickle`).
+- Cross-platform atomic file writes powered by
+  [python-atomicwrites](https://github.com/untitaker/python-atomicwrites).
+- Interface using a file path instead of a file handle, for more compatibility
+  with external libraries (e.g. `pandas.to_pickle`).
 - Automatically create missing directories and set their permissions.
 - Automatically set the file permissions.
 
