@@ -1,5 +1,10 @@
 # writer-cm
 
+![GitHub](https://github.com/dycw/writer-cm/workflows/tag/badge.svg)
+[![PyPI version](https://badge.fury.io/py/writer-cm.svg)](https://badge.fury.io/py/writer-cm)
+
+## Overview
+
 `writer-cm` is a context manager allowing you to atomically write files given a
 file path.
 
@@ -12,7 +17,13 @@ file path.
 - Automatically create missing directories and set their permissions.
 - Automatically set the file permissions.
 
-## How?
+## Installation
+
+```bash
+pip install writer-cm
+```
+
+## Usage
 
 ```python
 from writer_cm import writer_cm
@@ -23,9 +34,11 @@ with writer_cm("file.txt") as temp:
 
 with open("file.txt") as fh:
     assert fh.read() == "foo"
+```
 
-# Specify overwrite=True
+Pass `overwrite=True` to overwrite an already existing file; an error is thrown otherwise:
 
+```python
 with writer_cm("file.txt", overwrite=True) as temp:
     with open(temp, mode="w") as fh:
         fh.write("bar")
