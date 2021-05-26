@@ -11,37 +11,35 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+      - uses: ruby/setup-ruby@v1
         with:
-          python-version: 3.9
+          ruby-version: 3.0
       - uses: pre-commit/action@v2.0.0
 
   pytest:
-    name: pytest (${{ matrix.os }}, ${{ matrix.python-version }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        python-version: [3.7, 3.8, 3.9]
-    defaults:
-      run:
-        shell: bash -l {0}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: writer-cm
-          environment-file: environment.yml
-      - run: |
-          pytest -n auto
-
-  build:
+    name: pytest ${{ matrix.version }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.9
-      - run: |
-          pip install wheel
-      - run: |
-          python setup.py sdist bdist_wheel
+          version: ${{ matrix.version }}
+      - uses: snok/install-poetry@v1.1.2
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+      - if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      - name: pytest
+        run: |
+          source .venv/bin/activate
+          pytest -nauto

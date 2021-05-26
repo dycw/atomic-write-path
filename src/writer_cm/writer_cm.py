@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from contextlib import contextmanager
 from contextlib import suppress
 from pathlib import Path
@@ -7,7 +9,6 @@ from stat import S_IRWXU
 from stat import S_IWUSR
 from tempfile import TemporaryDirectory
 from typing import Generator
-from typing import Union
 
 from atomicwrites import move_atomic
 from atomicwrites import replace_atomic
@@ -15,7 +16,7 @@ from atomicwrites import replace_atomic
 
 @contextmanager
 def writer_cm(
-    destination: Union[Path, str],
+    destination: Path | str,
     *,
     overwrite: bool = False,
     dir_perms: int = S_IRWXU | S_IRWXG,
