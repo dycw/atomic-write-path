@@ -23,7 +23,7 @@ virtual_env = ".venv/bin/python"
 
 [tool.poetry]
 name = "writer-cm"
-version = "0.0.0"
+version = "1.0.11"
 description = "Atomically write files using a context manager"
 authors = ["Derek Wan <d.wan@icloud.com>"]
 license = "MIT"
