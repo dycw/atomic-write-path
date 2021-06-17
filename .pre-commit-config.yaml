@@ -45,7 +45,7 @@ repos:
     hooks:
       - id: validate_manifest
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.2.37
+    rev: 0.2.38
     hooks:
       - id: check-settings
   - repo: https://github.com/pre-commit/pre-commit-hooks
