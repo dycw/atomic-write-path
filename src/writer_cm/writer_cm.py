@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from contextlib import contextmanager
 from contextlib import suppress
 from pathlib import Path
@@ -11,6 +9,8 @@ from stat import S_IXGRP
 from stat import S_IXUSR
 from tempfile import TemporaryDirectory
 from typing import Iterator
+from typing import Optional
+from typing import Union
 
 from atomicwrites import move_atomic
 from atomicwrites import replace_atomic
@@ -18,13 +18,13 @@ from atomicwrites import replace_atomic
 
 @contextmanager
 def writer_cm(
-    destination: Path | str,
+    destination: Union[Path, str],
     *,
     overwrite: bool = False,
     dir_perms: int = S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP,
     file_perms: int = S_IRUSR | S_IWUSR,
-    user: str | None = None,
-    group: str | None = None,
+    user: Optional[str] = None,
+    group: Optional[str] = None,
 ) -> Iterator[Path]:
     """Context manager allowing you to atomically write files given a target
     path.
@@ -74,10 +74,12 @@ def writer_cm(
 
 
 def _set_properties(
-    path: Path, permissions: int, user: str | None, group: str | None
+    path: Path, permissions: int, user: Optional[str], group: Optional[str]
 ) -> None:
     """Set the permissions and/or ownership of a file."""
 
     path.chmod(permissions)
-    if (user is not None) or (group is not None):
-        chown(path, user=user, group=group)
+    if user is not None:
+        chown(path, user=user)  # pragma: no cover
+    if group is not None:
+        chown(path, group=group)  # pragma: no cover
