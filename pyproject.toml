@@ -39,7 +39,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "writer-cm"
-version = "1.1.0"
+version = "1.1.1"
 description = "Atomically write files using a context manager"
 authors = ["Derek Wan <d.wan@icloud.com>"]
 license = "MIT"
